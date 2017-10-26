@@ -81,9 +81,10 @@ public class MainActivity extends AppCompatActivity {
                 String checkInt = playerCountInput.getText().toString();
                 if (isNumeric(checkInt)) {
                     playerCount = Integer.parseInt(checkInt);
+                    players = new Player[playerCount];
                     for (int x = 0; x < playerCount; x++) {
+                        players[x] = new Player(playerName, cards, cardCount);
                         for (int y = 0; y < 1; y++) {
-                            players[x] = new Player(playerName, cards, 1);
                             players[x].playerCards[y].cardSuit = giveSuitsId(minSuitsId + (int) (Math.random() * ((maxSuitsId - minSuitsId) + 1)));
                             players[x].playerCards[y].cardNameID = minId + (int) (Math.random() * ((maxId - minId) + 1));
                         }
@@ -92,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
                     playerCount = 0;
                 }
                 displayPlayerCount.setText(Integer.toString(playerCount));
-                Card[] cardz = players[0].getPlayerCards().clone();
+                Card[] cardz = player1.getPlayerCards().clone();
                 displayCardSuits.setText(cardz[1].cardSuit);
-                displayCardSuits.setText(players[0].getPlayerName());
+                //displayCardSuits.setText(players[0].getPlayerName());
             }
         }
     }

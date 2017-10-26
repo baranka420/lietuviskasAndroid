@@ -6,7 +6,7 @@ package com.example.administrator.simpleseekslider;
 
 public class Player {
     public String playerName;
-    public Card playerCards[];
+    public Card []playerCards;
     public int cardCount;
     public Player(String name, Card cards[], int number){
         this.playerName = name;
