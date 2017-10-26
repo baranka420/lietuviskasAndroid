@@ -93,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
                     playerCount = 0;
                 }
                 displayPlayerCount.setText(Integer.toString(playerCount));
-                Card[] cardz = player1.getPlayerCards().clone();
-                displayCardSuits.setText(cardz[1].cardSuit);
-                //displayCardSuits.setText(players[0].getPlayerName());
+                Card[] cardz = players[0].getPlayerCards().clone();
+                displayCardSuits.setText(cardz[0].cardSuit);
+                displayPlayerName.setText(players[0].getPlayerName());
             }
         }
     }
