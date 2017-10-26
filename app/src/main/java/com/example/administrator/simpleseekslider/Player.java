@@ -7,12 +7,15 @@ package com.example.administrator.simpleseekslider;
 public class Player {
     public String playerName;
     public Card playerCards[];
-    public Player(String name, Card cards[]){
+    public int cardCount;
+    public Player(String name, Card cards[], int number){
         this.playerName = name;
         this.playerCards = cards.clone();
+        this.cardCount = number;
     }
 
-    public String getPlayerName() { return playerName; }
-    public Card[]getPlayerCards() { return playerCards; }
+    public String getPlayerName() { return this.playerName; }
+    public Card[]getPlayerCards() { return this.playerCards; }
+    public int getCardCount() { return this.cardCount; }
 
 }
