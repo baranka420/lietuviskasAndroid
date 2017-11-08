@@ -10,19 +10,21 @@ package com.example.administrator.simpleseekslider;
 
 public class MainActivity extends AppCompatActivity {
     TextView displayPlayerCount;
-    SeekBar seekBar;
     EditText playerCountInput;
     Button confirmPlayerCountButton;
+    Button confirmPlayerNameButton;
     TextView displayCardSuits;
     TextView playerNameInput;
     TextView displayPlayerName;
-    Button confirmNameButton;
-    int minSuitsId = 0;
-    int maxSuitsId = 3;
-    int minId = 9;
-    int maxId = 14;
-    int playerCount;
-    int cardCount = 4;
+    final int minSuitsId = 0;
+    final int maxSuitsId = 3;
+    final int minId = 9;
+    final int maxId = 14;
+    int playerCount = 0;
+    int cardCount = 1;
+    int playerNumber = 0;
+    final int maxPlayerCount = 5;
+    boolean conflictingName = false;
     String playerName = null;
     Card []cards = new Card[cardCount];
     Player player1;
@@ -35,16 +37,16 @@ public class MainActivity extends AppCompatActivity {
         displayPlayerCount = (TextView) findViewById(R.id.displayPlayerCount);
         displayCardSuits = (TextView) findViewById(R.id.displayCardSuits);
         displayPlayerName = (TextView) findViewById(R.id.displayPlayerName);
-        seekBar = (SeekBar) findViewById(R.id.seekBar);
         playerCountInput = (EditText) findViewById(R.id.playerCountInput);
         playerNameInput = (EditText) findViewById(R.id.playerNameInput);
-        confirmPlayerCountButton = (Button) findViewById(R.id.confirmButton);
-        confirmNameButton = (Button) findViewById(R.id.confirmNameButton);
-        playerCount = 0;
+        confirmPlayerCountButton = (Button) findViewById(R.id.confirmCountButton);
+        confirmPlayerNameButton = (Button) findViewById(R.id.confirmNameButton);
+        confirmPlayerNameButton.setVisibility(View.INVISIBLE);
         playerCountInput.setText("enter number of players", TextView.BufferType.EDITABLE);
         playerNameInput.setText("enter player name", TextView.BufferType.EDITABLE);
+        playerNameInput.setVisibility(View.INVISIBLE);
         confirmPlayerCountButton.setOnClickListener(new AddPlayerCount());
-        confirmNameButton.setOnClickListener(new AddPlayerName());
+        confirmPlayerNameButton.setOnClickListener(new AddPlayerName());
         for(int x = 0; x < cardCount; x++){
             int cardId = minId + (int)(Math.random() * ((maxId - minId) + 1));
             int cardSuitsId = minSuitsId + (int)(Math.random() * ((maxSuitsId - minSuitsId) + 1));
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         player1 = new Player("asshole", cards, cardCount);
         System.out.println(player1.getPlayerName());
     }
+
     protected String giveSuitsId(int id){
         String suitsId;
         switch (id){
@@ -74,37 +77,62 @@ public class MainActivity extends AppCompatActivity {
         }
         return suitsId;
     }
-    private class AddPlayerCount implements Button.OnClickListener{
-        @Override
-        public void onClick(View v) {
-            if(playerName != null) {
-                String checkInt = playerCountInput.getText().toString();
-                if (isNumeric(checkInt)) {
-                    playerCount = Integer.parseInt(checkInt);
-                    players = new Player[playerCount];
-                    for (int x = 0; x < playerCount; x++) {
-                        players[x] = new Player(playerName, cards, cardCount);
-                        for (int y = 0; y < 1; y++) {
-                            players[x].playerCards[y].cardSuit = giveSuitsId(minSuitsId + (int) (Math.random() * ((maxSuitsId - minSuitsId) + 1)));
-                            players[x].playerCards[y].cardNameID = minId + (int) (Math.random() * ((maxId - minId) + 1));
-                        }
-                    }
-                } else {
-                    playerCount = 0;
-                }
-                displayPlayerCount.setText(Integer.toString(playerCount));
-                Card[] cardz = players[0].getPlayerCards().clone();
-                displayCardSuits.setText(cardz[0].cardSuit);
-                displayPlayerName.setText(players[0].getPlayerName());
-            }
-        }
-    }
     private class AddPlayerName implements Button.OnClickListener{
         @Override
         public void onClick(View v) {
             playerName = playerNameInput.getText().toString();
+            if(playerNumber != 0) {
+                for (int x = 0; x < playerNumber; x++) {
+                    if (players[x].playerName == playerName) {
+                        conflictingName = true;
+                        break;
+                    }
+                }
+            }
+            if(playerName != "enter player name" && playerName.length() < 20 && !conflictingName) {
+                if(playerNumber == playerCount) {
+                    for(int x = 0; x < playerCount; x++) {
+                        for (int y = 0; y < players[x].getCardCount(); y++) {
+                            players[x].playerCards[y].cardSuit = giveSuitsId(minSuitsId + (int) (Math.random() * ((maxSuitsId - minSuitsId) + 1)));
+                            players[x].playerCards[y].cardNameID = minId + (int) (Math.random() * ((maxId - minId) + 1));
+                        }
+                    }
+                    displayPlayerName.setText(players[0].getPlayerName());
+                    displayCardSuits.setText(players[0].playerCards[0].cardSuit);
+                }else{
+                    players[playerNumber] = new Player(playerName, cards, cardCount);
+                    playerNumber++;
+                }
+                /*
+                displayPlayerCount.setText(Integer.toString(playerCount));
+                Card[] cardz = players[0].getPlayerCards().clone();
+                displayCardSuits.setText(cardz[0].cardSuit);
+                displayPlayerName.setText(players[0].getPlayerName());
+                */
+                //setContentView(R.layout.activity_game);
+
+            }
         }
     }
+
+    private class AddPlayerCount implements Button.OnClickListener{
+        @Override
+        public void onClick(View v){
+            String checkInt = playerCountInput.getText().toString();
+            if (isNumeric(checkInt)) {
+                if(Integer.parseInt(checkInt) > maxPlayerCount) {
+                }else{
+                    playerCount = Integer.parseInt(checkInt);
+                    players = new Player[playerCount];
+                    confirmPlayerNameButton.setVisibility(View.VISIBLE);
+                    confirmPlayerCountButton.setVisibility(View.INVISIBLE);
+                    playerNameInput.setVisibility(View.VISIBLE);
+                    playerCountInput.setVisibility(View.INVISIBLE);
+                }
+            }
+        }
+    }
+
     public static boolean isNumeric(String str){
         try{
             double d = Double.parseDouble(str);
@@ -114,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
 
 }
 

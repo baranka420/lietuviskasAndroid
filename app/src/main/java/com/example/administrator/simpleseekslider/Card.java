@@ -13,8 +13,8 @@ public class Card {
         this.cardSuit = y;
     }
 
-    public int cardNameID() { return cardNameID(); }
-    public String cardSuit() { return cardSuit(); }
+    public int cardNameID() { return this.cardNameID(); }
+    public String cardSuit() { return this.cardSuit(); }
 
     // return a string representation of this point
     public String toString() {
