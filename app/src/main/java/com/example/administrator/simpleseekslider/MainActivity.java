@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             if (isNumeric(checkInt)) {
                 if(Integer.parseInt(checkInt) > maxPlayerCount) {
                 }else{
-                    playerCount = Integer.parseInt(checkInt);
+                    playerCount = Integer.parseInt(checkInt)-1;
                     players = new Player[playerCount];
                     confirmPlayerNameButton.setVisibility(View.VISIBLE);
                     confirmPlayerCountButton.setVisibility(View.INVISIBLE);
