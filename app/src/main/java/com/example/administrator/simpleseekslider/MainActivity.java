@@ -6,7 +6,8 @@ package com.example.administrator.simpleseekslider;
         import android.widget.Button;
         import android.widget.EditText;
         import android.widget.TextView;
-        import android.widget.SeekBar;
+        import android.content.Intent;
+
 
 public class MainActivity extends AppCompatActivity {
     TextView displayPlayerCount;
@@ -26,9 +27,11 @@ public class MainActivity extends AppCompatActivity {
     final int maxPlayerCount = 5;
     boolean conflictingName = false;
     String playerName = null;
+    String playerNames;
     Card []cards = new Card[cardCount];
     Player player1;
     Player[] players;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,16 +50,17 @@ public class MainActivity extends AppCompatActivity {
         playerNameInput.setVisibility(View.INVISIBLE);
         confirmPlayerCountButton.setOnClickListener(new AddPlayerCount());
         confirmPlayerNameButton.setOnClickListener(new AddPlayerName());
+
         for(int x = 0; x < cardCount; x++){
             int cardId = minId + (int)(Math.random() * ((maxId - minId) + 1));
             int cardSuitsId = minSuitsId + (int)(Math.random() * ((maxSuitsId - minSuitsId) + 1));
-            cards[x] = new Card(cardId, giveSuitsId(cardSuitsId));
+            cards[x] = new Card(cardId, giveSuitsNameById(cardSuitsId));
         }
         player1 = new Player("asshole", cards, cardCount);
         System.out.println(player1.getPlayerName());
     }
 
-    protected String giveSuitsId(int id){
+    protected String giveSuitsNameById(int id){
         String suitsId;
         switch (id){
             case 0:
@@ -93,12 +97,18 @@ public class MainActivity extends AppCompatActivity {
                 if(playerNumber == playerCount) {
                     for(int x = 0; x < playerCount; x++) {
                         for (int y = 0; y < players[x].getCardCount(); y++) {
-                            players[x].playerCards[y].cardSuit = giveSuitsId(minSuitsId + (int) (Math.random() * ((maxSuitsId - minSuitsId) + 1)));
+                            players[x].playerCards[y].cardSuit = giveSuitsNameById(minSuitsId + (int) (Math.random() * ((maxSuitsId - minSuitsId) + 1)));
                             players[x].playerCards[y].cardNameID = minId + (int) (Math.random() * ((maxId - minId) + 1));
                         }
                     }
                     displayPlayerName.setText(players[0].getPlayerName());
                     displayCardSuits.setText(players[0].playerCards[0].cardSuit);
+                    for(int i = 0; i < playerNumber; i++){
+                        playerNames += players[i].getPlayerName();
+                        playerNames += ",";
+                    }
+                    createGameActivity(playerCount, playerNames);
+
                 }else{
                     players[playerNumber] = new Player(playerName, cards, cardCount);
                     playerNumber++;
@@ -120,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v){
             String checkInt = playerCountInput.getText().toString();
             if (isNumeric(checkInt)) {
-                if(Integer.parseInt(checkInt) > maxPlayerCount) {
+                if(Integer.parseInt(checkInt) > maxPlayerCount || Integer.parseInt(checkInt) < 2) {
                 }else{
                     playerCount = Integer.parseInt(checkInt)-1;
                     players = new Player[playerCount];
@@ -142,7 +152,14 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
+    public void createGameActivity(int number, String playerNames){
+        Intent playerCountIntent = new Intent(this, Game.class);
+        playerCountIntent.putExtra("playerCount", number);
+        startActivity(playerCountIntent);
+        Intent playerNamesIntent = new Intent(this, Game.class);
+        playerNamesIntent.putExtra("playerNames", playerNames);
+        startActivity(playerNamesIntent);
+    }
 
 }
 

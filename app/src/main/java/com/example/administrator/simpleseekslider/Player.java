@@ -15,7 +15,7 @@ public class Player {
     }
 
     public String getPlayerName() { return this.playerName; }
-    public Card[]getPlayerCards() { return this.playerCards; }
+    public Card[] getPlayerCards() { return this.playerCards; }
     public int getCardCount() { return this.cardCount; }
 
 }
