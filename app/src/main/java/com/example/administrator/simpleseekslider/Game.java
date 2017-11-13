@@ -31,16 +31,23 @@ public class Game extends AppCompatActivity {
         takeTurnButton = (Button) findViewById(R.id.takeTurnButton);
         pickCombinationSpinner = (Spinner) findViewById(R.id.pickCombinationSpinner);
         firstCard = (TextView) findViewById(R.id.firstCard);
-        Intent intent = getIntent();
-        playerCount = intent.getExtras().getInt("playerCount");
-        Intent playerNamesIntent = getIntent();
-        playerNames = playerNamesIntent.getExtras().getString("playerNames");
+        Intent gameDataIntent = getIntent();
+        playerCount = gameDataIntent.getExtras().getInt("playerCount");
+        //Intent playerNamesIntent = getIntent();
+        playerNames = gameDataIntent.getExtras().getString("playerNames");
         playerNamesArray = playerNames.split(",");
         allCards = new AllCards[24];
         players = new Player[playerCount];
+        for(int x = 0; x < cardCount; x++){
+            //int cardId = minId + (int)(Math.random() * ((maxId - minId) + 1));
+            //int cardSuitsId = minSuitsId + (int)(Math.random() * ((maxSuitsId - minSuitsId) + 1));
+            cards[x] = new Card(minId, giveSuitsNameById(minSuitsId));
+        }
+        int i = 0;
         for (int x = minId; x < maxId+1; x++) {
             for(int y = minSuitsId; y < maxSuitsId+1; y++){
-                allCards[y] = new AllCards(x, giveSuitsNameById(y));
+                allCards[i] = new AllCards(x, giveSuitsNameById(y));
+                i++;
             }
         }
         for(int x = 0; x < playerCount; x++) {
@@ -85,6 +92,6 @@ public class Game extends AppCompatActivity {
     }
 
     public void showPlayerView(int playerTurn){
-        firstCard.setText(players[0].playerCards[0].cardSuit+players[0].playerCards[0].cardNameID);
+        firstCard.setText(players[playerTurn].playerCards[0].cardSuit + players[playerTurn].playerCards[0].cardNameID);
     }
 }

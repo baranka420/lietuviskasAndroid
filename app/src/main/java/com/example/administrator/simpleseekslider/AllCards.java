@@ -17,6 +17,6 @@ public class AllCards {
 
     public int cardId() { return this.cardId(); }
     public String cardSuit() { return this.cardSuit(); }
-    public boolean occupied() { return this.occupied(); }
+    public boolean occupied() { return this.occupied; }
     public void setOccupied(){this.occupied = true; }
 }

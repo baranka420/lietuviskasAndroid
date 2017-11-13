@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     final int maxPlayerCount = 5;
     boolean conflictingName = false;
     String playerName = null;
-    String playerNames;
+    String playerNames ="";
     Card []cards = new Card[cardCount];
     Player player1;
     Player[] players;
@@ -94,25 +94,25 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             if(playerName != "enter player name" && playerName.length() < 20 && !conflictingName) {
-                if(playerNumber == playerCount) {
-                    for(int x = 0; x < playerCount; x++) {
-                        for (int y = 0; y < players[x].getCardCount(); y++) {
-                            players[x].playerCards[y].cardSuit = giveSuitsNameById(minSuitsId + (int) (Math.random() * ((maxSuitsId - minSuitsId) + 1)));
-                            players[x].playerCards[y].cardNameID = minId + (int) (Math.random() * ((maxId - minId) + 1));
+                players[playerNumber] = new Player(playerName, cards, cardCount);
+                playerNumber++;
+                    if(playerNumber == playerCount) {
+                        for(int x = 0; x < playerCount; x++) {
+                            for (int y = 0; y < players[x].getCardCount(); y++) {
+                                players[x].playerCards[y].cardSuit = giveSuitsNameById(minSuitsId + (int) (Math.random() * ((maxSuitsId - minSuitsId) + 1)));
+                                players[x].playerCards[y].cardNameID = (minId + (int) (Math.random() * ((maxId - minId) + 1)));
+                            }
                         }
-                    }
-                    displayPlayerName.setText(players[0].getPlayerName());
-                    displayCardSuits.setText(players[0].playerCards[0].cardSuit);
-                    for(int i = 0; i < playerNumber; i++){
-                        playerNames += players[i].getPlayerName();
-                        playerNames += ",";
-                    }
-                    createGameActivity(playerCount, playerNames);
+                        displayPlayerName.setText(players[0].getPlayerName());
+                        displayCardSuits.setText(players[0].playerCards[0].cardSuit);
+                        for(int i = 0; i < playerCount; i++){
+                            playerNames += players[i].getPlayerName();
+                            playerNames += (i==playerNumber-1) ? "" : ",";
+                            //playerNames += ",";
+                        }
+                        createGameActivity(playerCount, playerNames);
 
-                }else{
-                    players[playerNumber] = new Player(playerName, cards, cardCount);
-                    playerNumber++;
-                }
+                    }
                 /*
                 displayPlayerCount.setText(Integer.toString(playerCount));
                 Card[] cardz = players[0].getPlayerCards().clone();
@@ -120,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 displayPlayerName.setText(players[0].getPlayerName());
                 */
                 //setContentView(R.layout.activity_game);
-
             }
         }
     }
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
             if (isNumeric(checkInt)) {
                 if(Integer.parseInt(checkInt) > maxPlayerCount || Integer.parseInt(checkInt) < 2) {
                 }else{
-                    playerCount = Integer.parseInt(checkInt)-1;
+                    playerCount = Integer.parseInt(checkInt);
                     players = new Player[playerCount];
                     confirmPlayerNameButton.setVisibility(View.VISIBLE);
                     confirmPlayerCountButton.setVisibility(View.INVISIBLE);
@@ -153,12 +152,14 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
     public void createGameActivity(int number, String playerNames){
-        Intent playerCountIntent = new Intent(this, Game.class);
-        playerCountIntent.putExtra("playerCount", number);
-        startActivity(playerCountIntent);
-        Intent playerNamesIntent = new Intent(this, Game.class);
-        playerNamesIntent.putExtra("playerNames", playerNames);
-        startActivity(playerNamesIntent);
+        Intent startGameIntent = new Intent(this, Game.class);
+        //playerCountIntent.putExtra("playerCount", number);
+        //startActivity(playerCountIntent);
+        //Intent playerNamesIntent = new Intent(this, Game.class);
+        //playerNamesIntent.putExtra("playerNames", playerNames);
+        startGameIntent.putExtra("playerCount", number);
+        startGameIntent.putExtra("playerNames", playerNames);
+        startActivity(startGameIntent);
     }
 
 }
