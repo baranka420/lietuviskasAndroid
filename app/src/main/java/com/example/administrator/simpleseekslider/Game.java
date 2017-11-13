@@ -1,8 +1,10 @@
 package com.example.administrator.simpleseekslider;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.content.Intent;
 import android.widget.TextView;
@@ -10,7 +12,9 @@ import android.widget.TextView;
 public class Game extends AppCompatActivity {
     Button takeTurnButton;
     Spinner pickCombinationSpinner;
-    TextView firstCard;
+    TextView firstCard, nameDisplay;
+    ImageView iv1, iv2, iv3, iv4;
+    private ImageView[] images = {iv1, iv2, iv3, iv4};
     final int minSuitsId = 0;
     final int maxSuitsId = 3;
     final int minId = 9;
@@ -19,7 +23,7 @@ public class Game extends AppCompatActivity {
     int cardCount = 1;
     int playerTurn = 0;
     String playerNames;
-    Card []cards = new Card[cardCount];
+    Card[] cards = new Card[cardCount];
     Player[] players;
     String[] playerNamesArray;
     AllCards[] allCards;
@@ -31,6 +35,11 @@ public class Game extends AppCompatActivity {
         takeTurnButton = (Button) findViewById(R.id.takeTurnButton);
         pickCombinationSpinner = (Spinner) findViewById(R.id.pickCombinationSpinner);
         firstCard = (TextView) findViewById(R.id.firstCard);
+        nameDisplay = (TextView) findViewById(R.id.nameDisplay);
+        iv1 = (ImageView) findViewById(R.id.iv1);
+        iv2 = (ImageView) findViewById(R.id.iv2);
+        iv3 = (ImageView) findViewById(R.id.iv3);
+        iv4 = (ImageView) findViewById(R.id.iv4);
         Intent gameDataIntent = getIntent();
         playerCount = gameDataIntent.getExtras().getInt("playerCount");
         //Intent playerNamesIntent = getIntent();
@@ -54,7 +63,7 @@ public class Game extends AppCompatActivity {
             players[x] = new Player(playerNamesArray[x], cards, cardCount);
             dealCards(x);
         }
-        showPlayerView(0);
+        showPlayerView(playerTurn);
     }
 
     public void dealCards(int playerNumber){
@@ -93,5 +102,14 @@ public class Game extends AppCompatActivity {
 
     public void showPlayerView(int playerTurn){
         firstCard.setText(players[playerTurn].playerCards[0].cardSuit + players[playerTurn].playerCards[0].cardNameID);
+        nameDisplay.setText(players[playerTurn].getPlayerName());
+        for(int x = 0; x < players[playerTurn].cardCount; x++){
+            //String a = "drawable://" + Integer.toString(players[playerTurn].playerCards[x].cardNameID) + "_of_" + players[playerTurn].playerCards[x].cardSuit;
+
+            String name = Integer.toString(players[playerTurn].playerCards[x].cardNameID) + "_of_" + players[playerTurn].playerCards[x].cardSuit + ".png";
+            int id = getResources().getIdentifier(name, "drawable", getPackageName());
+            Drawable drawale = getResources().getDrawable(id);
+            images[x].setImageResource(drawale);
+        }
     }
 }
