@@ -1,6 +1,8 @@
 package com.example.administrator.simpleseekslider;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -28,6 +30,7 @@ public class Game extends AppCompatActivity {
     String[] playerNamesArray;
     AllCards[] allCards;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,7 @@ public class Game extends AppCompatActivity {
         iv2 = (ImageView) findViewById(R.id.iv2);
         iv3 = (ImageView) findViewById(R.id.iv3);
         iv4 = (ImageView) findViewById(R.id.iv4);
+        Context context = this.getApplicationContext();
         Intent gameDataIntent = getIntent();
         playerCount = gameDataIntent.getExtras().getInt("playerCount");
         //Intent playerNamesIntent = getIntent();
@@ -63,7 +67,7 @@ public class Game extends AppCompatActivity {
             players[x] = new Player(playerNamesArray[x], cards, cardCount);
             dealCards(x);
         }
-        showPlayerView(playerTurn);
+        showPlayerView(playerTurn, context);
     }
 
     public void dealCards(int playerNumber){
@@ -100,16 +104,18 @@ public class Game extends AppCompatActivity {
         return suitsId;
     }
 
-    public void showPlayerView(int playerTurn){
+    public void showPlayerView(int playerTurn, Context ctx){
         firstCard.setText(players[playerTurn].playerCards[0].cardSuit + players[playerTurn].playerCards[0].cardNameID);
         nameDisplay.setText(players[playerTurn].getPlayerName());
         for(int x = 0; x < players[playerTurn].cardCount; x++){
-            //String a = "drawable://" + Integer.toString(players[playerTurn].playerCards[x].cardNameID) + "_of_" + players[playerTurn].playerCards[x].cardSuit;
+            //String a = "drawable://" + "a" + Integer.toString(players[playerTurn].playerCards[x].cardNameID) + "_of_" + players[playerTurn].playerCards[x].cardSuit;
 
-            String name = Integer.toString(players[playerTurn].playerCards[x].cardNameID) + "_of_" + players[playerTurn].playerCards[x].cardSuit + ".png";
+            String name = "a" + Integer.toString(players[playerTurn].playerCards[x].cardNameID) + "_of_" + players[playerTurn].playerCards[x].cardSuit;
             int id = getResources().getIdentifier(name, "drawable", getPackageName());
             Drawable drawale = getResources().getDrawable(id);
-            images[x].setImageResource(drawale);
+            //images[x].setImageDrawable(ContextCompat.getDrawable(ctx , id));
+            images[x].setImageDrawable(drawale);
+            //images[x].setImageDrawable(drawale);
         }
     }
 }
